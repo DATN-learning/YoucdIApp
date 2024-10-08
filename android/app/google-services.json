@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "380316299962",
+    "project_id": "youcdifb",
+    "storage_bucket": "youcdifb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380316299962:android:19477ff9a8d39218c20883",
+        "android_client_info": {
+          "package_name": "com.youcdi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380316299962-v2gm1nkh42376vsettk55dfu8cdjd29j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.youcdi",
+            "certificate_hash": "b7187cad5c81af3fcdf7472a10b7741bfe521d4c"
+          }
+        },
+        {
+          "client_id": "380316299962-vlol3ho3796873642pa0inun4ebqivk2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXll7pNSSMogvYFnd1zJJspvxCYzehif4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380316299962-vlol3ho3796873642pa0inun4ebqivk2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
