@@ -120,7 +120,7 @@ export const createCommentPostApi = ({
       uri: image_comment,
       type: typeImage,
       // random name
-      name: 'image_comment' + Math.random(),
+      name: 'image_comment' ,
     });
   const response = axiosClientFormData.post<ICreateCommentPostPayload>(
     apiRouters.createCommentPost,
