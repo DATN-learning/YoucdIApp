@@ -13,4 +13,7 @@ export const apiRouters = {
   getCommentByPost: 'api/manapost/getCommentPost',
   createCommentPost: 'api/manapost/createCommentPost',
   createDeviceToken: 'api/tokennotification',
+
+  //
+  submitChapterAnswer: 'api/question/submitedChapterAnswer'
 };

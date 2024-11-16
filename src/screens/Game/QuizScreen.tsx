@@ -5,7 +5,7 @@ import LottieView from 'lottie-react-native';
 import styled from 'styled-components/native';
 import {getListQuestionChapter} from '../../redux/classRoom/selectors';
 import {GIFJSON} from '../../utils/constant';
-import {Text, View} from 'react-native';
+import {Alert, Button, Text, View} from 'react-native';
 import MenuGameSecton from '../../components/MenuGameSection';
 import MenuGameSeciton from '../../components/MenuGameSection';
 import ItemQuestionGame from '../../components/ItemQuestionGame';
@@ -21,6 +21,11 @@ import {
   setQuestionSelected,
   setStopCountDown,
 } from '../../redux/gameChapter/actions';
+import { submitChapterAnswer } from '../../api/scoreApi';
+import { IQuestionPayLoad } from '../../interfaces/Question';
+import { ItemQuestionGameProps } from '../../components/ItemQuestionGame/type';
+import { useNavigation } from '@react-navigation/native';
+import { ResultScreenNavigationProps } from './ResultScreen';
 // create a component
 const QuizScreenContainer = styled.View`
   flex: 1;
@@ -42,6 +47,7 @@ const ViewPlayGame = styled.View`
 const ListQuestionGame = styled.FlatList``;
 
 const QuizScreen = () => {
+  const navigation = useNavigation<ResultScreenNavigationProps>();
   const listQuestionChapter = useSelector(getListQuestion);
   const [isStart, setIsStart] = React.useState(false);
   const countDown = useSelector(getCountDown);
@@ -50,6 +56,10 @@ const QuizScreen = () => {
   const dispatch = useDispatch();
   let timeOut: any = null;
   const flatListRef = React.useRef<any>(null);
+  const {user} = useAuth();
+  const [userAnswers, setUserAnswers] = React.useState<any[]>([]); 
+  const [score, setScore] = React.useState(0); 
+
   React.useEffect(() => {
     if (isStart) {
       if (countDown > 0) {
@@ -78,6 +88,56 @@ const QuizScreen = () => {
     }
   }, [countDown, isStart, stopCountDown]);
 
+  const handleAnswerSelected = (answer: {question_id: string; answer_id: string; is_correct: boolean}) => {
+    setUserAnswers(prev => [...prev, answer]);
+    if (answer.is_correct) {
+      setScore(prev => prev + 1); 
+    }
+  };
+
+  const handleSubmitChapter = async () => {
+    try {
+      const currentQuestion = listQuestionChapter[idQuestionSelected];
+      const id_question_query = currentQuestion?.id_question_query;
+
+      const date = new Date();
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const dateScore = `${day}${month}${year}`;
+      const score_id = `score_chapter_${dateScore}`;
+
+      const response = await submitChapterAnswer(
+        score_id,
+        user.id,
+        id_question_query,
+        userAnswers
+      );
+      Alert.alert('Success', `Your total score is: ${response.data.data.total_score}`);
+      navigation.navigate('ResultScreen', {
+        score: score,
+        userAnswers: userAnswers,
+      }); // Điều hướng tới ResultScreen
+    } catch (error) {
+      Alert.alert('Error', 'Failed to submit chapter');
+      console.error(error);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    let nextIndex = idQuestionSelected + 1;
+    if (nextIndex >= listQuestionChapter.length) {
+      dispatch(setStopCountDown(true)); // Stop the countdown
+      return; // Stay at the last question
+    }
+    dispatch(setQuestionSelected(nextIndex));
+    dispatch(setCountDown(10));
+    flatListRef.current.scrollToIndex({
+      index: nextIndex,
+      animated: true,
+    });
+  };
+
   return (
     <QuizScreenContainer>
       {isStart ? (
@@ -92,10 +152,17 @@ const QuizScreen = () => {
               pagingEnabled={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}: any) => (
-                <ItemQuestionGame data={item} index={index} />
+                <ItemQuestionGame data={item} index={index} onAnswerSelected={handleAnswerSelected} />
               )}
               keyExtractor={(_, index): any => index.toString()}
             />
+            {idQuestionSelected < listQuestionChapter.length - 1 && (
+              <Button title="Tiếp" onPress={handleNextQuestion} />
+            )}
+            {idQuestionSelected === listQuestionChapter.length - 1 && (
+              <Button title="Hoàn Thành" onPress={handleSubmitChapter} />
+            )}
+            <Text>Total Score: {score}</Text>
           </ViewPlayGame>
         </ViewGameContainer>
       ) : (
@@ -114,5 +181,10 @@ const QuizScreen = () => {
   );
 };
 
+
 //make this component available to the app
 export default QuizScreen;
+
+
+
+

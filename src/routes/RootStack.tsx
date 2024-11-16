@@ -14,6 +14,7 @@ import AnalyzeExercisesScreen from '../screens/LearnSpace/AnalyzeExercisesScreen
 import CreatePostScreen from '../screens/LearnSpace/CreatePostScreen';
 import DetailsPostScreen from '../screens/LearnSpace/DetailsPostScreen';
 import {Response} from '../mlkit';
+import ResultScreen from '../screens/Game/ResultScreen';
 export type RootStackParamList = {
   Splashscreen: undefined;
   Authen: undefined;
@@ -42,6 +43,7 @@ export type RootStackParamList = {
     blocResponse: Response;
   };
   DetailsPostScreen: undefined;
+  ResultScreen: {};
 };
 const Stack = createStackNavigator<RootStackParamList>();
 const RootStack: FC = () => {
@@ -106,6 +108,11 @@ const RootStack: FC = () => {
       <Stack.Screen
         name="DetailsPostScreen"
         component={DetailsPostScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ResultScreen"
+        component={ResultScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
