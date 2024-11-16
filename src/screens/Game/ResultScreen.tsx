@@ -34,20 +34,20 @@ const ResultScreen = ({route, navigation}: any) => {
 
   return (
     <ResultScreenContainer>
-      <Text style={{color: '#fff', fontSize: 24}}>Your Results</Text>
-      <Text style={{color: '#fff', fontSize: 20}}>Total Score: {score}</Text>
+      <Text style={{color: '#fff', fontSize: 24}}>Kết quả</Text>
+      <Text style={{color: '#fff', fontSize: 20}}>Điểm: {score}</Text>
       <FlatList
         data={userAnswers}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({item, index}) => (
           <ResultItem>
             <ResultText>
-              Question {index + 1}: {item.is_correct ? 'Correct' : 'Wrong'}
+              Câu {index + 1}: {item.is_correct ? 'Đúng' : 'Sai'}
             </ResultText>
           </ResultItem>
         )}
       />
-      <Button title="Go Back to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Quay lại trang chủ" onPress={() => navigation.navigate('Home')} />
     </ResultScreenContainer>
   );
 };

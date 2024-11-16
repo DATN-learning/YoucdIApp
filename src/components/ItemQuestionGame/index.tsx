@@ -71,6 +71,7 @@ const ItemQuestionGame: FC<ItemQuestionGameProps> = props => {
     const isCorrect = id === data.answer_correct;
     setAnswerChoosed(id);
     setIsChoose(true);
+    console.log(id)
 
     // Gửi kết quả về QuizScreen
     onAnswerSelected({

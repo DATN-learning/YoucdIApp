@@ -54,36 +54,32 @@ const QuizScreen = () => {
   const stopCountDown = useSelector(getStopCountDown);
   const idQuestionSelected = useSelector(getIdQuestionSelected);
   const dispatch = useDispatch();
-  let timeOut: any = null;
   const flatListRef = React.useRef<any>(null);
   const {user} = useAuth();
   const [userAnswers, setUserAnswers] = React.useState<any[]>([]); 
   const [score, setScore] = React.useState(0); 
+  const timeOutRef = React.useRef<number | null>(null);
+  React.useEffect(() => {
+    return () => {
+      if (timeOutRef.current) {
+        clearTimeout(timeOutRef.current);
+      }
+    };
+  }, []);
 
   React.useEffect(() => {
     if (isStart) {
       if (countDown > 0) {
         if (!stopCountDown) {
-          const timeOut = setTimeout(() => {
+          if (timeOutRef.current) {
+            clearTimeout(timeOutRef.current);
+          }
+          timeOutRef.current = setTimeout(() => {
             dispatch(setCountDown(countDown - 1));
           }, 1000);
         }
       } else {
-        let index = idQuestionSelected + 1;
-        if (index >= listQuestionChapter.length) {
-          index = 0;
-          console.log('end game aa');
-          clearTimeout(timeOut);
-        } else {
-          timeOut = setTimeout(() => {
-            dispatch(setQuestionSelected(index));
-            dispatch(setCountDown(10));
-            flatListRef.current.scrollToIndex({
-              index: index,
-              animated: true,
-            });
-          }, 1000);
-        }
+        handleNextQuestion(); 
       }
     }
   }, [countDown, isStart, stopCountDown]);
@@ -93,6 +89,24 @@ const QuizScreen = () => {
     if (answer.is_correct) {
       setScore(prev => prev + 1); 
     }
+  };
+
+  const handleNextQuestion = () => {
+    if (timeOutRef.current) {
+      clearTimeout(timeOutRef.current);
+    }
+
+    let nextIndex = idQuestionSelected + 1;
+    if (nextIndex >= listQuestionChapter.length) {
+      dispatch(setStopCountDown(true)); 
+      return; 
+    }
+    dispatch(setQuestionSelected(nextIndex));
+    dispatch(setCountDown(10)); 
+    flatListRef.current.scrollToIndex({
+      index: nextIndex,
+      animated: true,
+    });
   };
 
   const handleSubmitChapter = async () => {
@@ -113,29 +127,15 @@ const QuizScreen = () => {
         id_question_query,
         userAnswers
       );
-      Alert.alert('Success', `Your total score is: ${response.data.data.total_score}`);
+      console.log(response.data.data.total_score);
       navigation.navigate('ResultScreen', {
-        score: score,
+        score: response.data.data.total_score,
         userAnswers: userAnswers,
-      }); // Điều hướng tới ResultScreen
+      }); 
     } catch (error) {
       Alert.alert('Error', 'Failed to submit chapter');
       console.error(error);
     }
-  };
-
-  const handleNextQuestion = () => {
-    let nextIndex = idQuestionSelected + 1;
-    if (nextIndex >= listQuestionChapter.length) {
-      dispatch(setStopCountDown(true)); // Stop the countdown
-      return; // Stay at the last question
-    }
-    dispatch(setQuestionSelected(nextIndex));
-    dispatch(setCountDown(10));
-    flatListRef.current.scrollToIndex({
-      index: nextIndex,
-      animated: true,
-    });
   };
 
   return (
