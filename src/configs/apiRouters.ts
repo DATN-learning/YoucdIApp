@@ -15,5 +15,6 @@ export const apiRouters = {
   createDeviceToken: 'api/tokennotification',
 
   //
-  submitChapterAnswer: 'api/question/submitedChapterAnswer'
+  submitChapterAnswer: 'api/question/submitedChapterAnswer',
+  getUserLastLesson: 'api/view/getUserLastLesson'
 };

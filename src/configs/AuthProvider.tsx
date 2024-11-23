@@ -123,7 +123,7 @@ const AuthProvider = ({children}: {children: any}) => {
           setUser({} as IUser);
           removeTokenAsyncStorage();
           setIsAuthenticated(false);
-          Alert.alert('Thông báo', 'Đăng xuất thành công');
+          // Alert.alert('Thông báo', 'Đăng xuất thành công');
           navigation.goBack();
           return true;
         } else {

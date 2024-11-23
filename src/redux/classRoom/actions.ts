@@ -1,7 +1,8 @@
 import { createAction } from '@reduxjs/toolkit';
-import { IClassSuccessPayload } from '../../interfaces/Class';
+import { IClassSuccessPayload, ISubject } from '../../interfaces/Class';
 import { IQuestionPayLoad } from '../../interfaces/Question';
 import { EClassRoomActionType, IChooseSubject, ISetChapterEnable } from './type';
+import { IChapter } from '../../interfaces/Subject';
 
 
 export const getSubjectClassRoomRequest = createAction(
@@ -23,5 +24,7 @@ export const chooseSubject = createAction<IChooseSubject>(EClassRoomActionType.C
 export const setListQuestionChapter = createAction<IQuestionPayLoad[]>(
   EClassRoomActionType.SET_LIST_QUESTION_CHAPTER,
 );
+
+export const setListChapter = createAction<IChapter[]>('ACTION/SET_LIST_CHAPTERS');
 
 export const setChapterEnable = createAction<ISetChapterEnable>(EClassRoomActionType.SET_CHAPTER_ENABLE);

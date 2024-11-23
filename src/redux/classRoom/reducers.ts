@@ -8,8 +8,11 @@ import {
   setListQuestionChapter,
   setChapterEnable,
 } from './actions';
-import { IClass } from '../../interfaces/Class';
+import { IClass, ISubject } from '../../interfaces/Class';
 import { IQuestionPayLoad } from '../../interfaces/Question';
+import { setListChapter } from './actions';
+import { IChapter } from '../../interfaces/Subject';
+import { ILessionByChapterPayLoad } from '../../interfaces/Lession';
 interface IinitialState {
   loading: boolean;
   numberClassRoom: number;
@@ -18,6 +21,18 @@ interface IinitialState {
     id: string;
     id_relation: number;
   };
+  listchapter: {
+    id: number;
+    id_chapter_subject: string;
+    subject_id: number;
+    name_chapter_subject: string;
+    chapter_image: string;
+    slug: string;
+    created_at: string;
+    updated_at: string;
+    number_chapter: number;
+    // lessions: ILessionByChapterPayLoad[];
+  },
   chapterEnable: {
     id: number;
     name: string;
@@ -35,6 +50,18 @@ const initialState: IinitialState = {
     id: '',
     id_relation: -1,
   },
+  listchapter: {
+    id: 0,
+    id_chapter_subject: '',
+    subject_id: 0,
+    name_chapter_subject: '',
+    chapter_image: '',
+    slug: '',
+    created_at: '',
+    updated_at: '',
+    number_chapter: 0,
+    // lessions: ILessionByChapterPayLoad[],
+  },
   chapterEnable: {
     id: 0,
     name: '',
@@ -42,6 +69,7 @@ const initialState: IinitialState = {
   },
   listClass: [],
   listQuestionChapter: [],
+
 };
 
 export const ClassRoomReducer = createReducer(initialState, {
@@ -75,5 +103,8 @@ export const ClassRoomReducer = createReducer(initialState, {
       name: action.payload.name,
       number: action.payload.number,
     };
+  },
+  [setListChapter.type]: (state, action) => {
+    state.listchapter = action.payload; // Cập nhật danh sách môn học
   },
 });
