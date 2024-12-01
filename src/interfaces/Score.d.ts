@@ -16,6 +16,7 @@ export interface IScore {
     question_id: string;
     answer_id: string;
     is_correct: string;
+    question_query_id:string;
     score: string;
     created_at: string;
     updated_at: string;   
@@ -24,8 +25,6 @@ export interface IScore {
 export interface IScoresPayload {
     status: boolean;
     message: string;
-    data: {
-        total_score: IScore;
-    };
+    data:  IScore;
 }
 

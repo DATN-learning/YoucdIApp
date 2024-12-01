@@ -16,5 +16,8 @@ export const apiRouters = {
 
   //
   submitChapterAnswer: 'api/question/submitedChapterAnswer',
-  getUserLastLesson: 'api/view/getUserLastLesson'
+  getPointChapter: 'api/question/getPointChapter',
+  //view
+  getUserLastLesson: 'api/view/getUserLastLesson',
+  startView: 'api/view/startView',
 };

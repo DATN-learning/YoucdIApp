@@ -15,6 +15,7 @@ import CreatePostScreen from '../screens/LearnSpace/CreatePostScreen';
 import DetailsPostScreen from '../screens/LearnSpace/DetailsPostScreen';
 import {Response} from '../mlkit';
 import ResultScreen from '../screens/Game/ResultScreen';
+import { IChapterWithoutExercises } from '../interfaces/Subject';
 export type RootStackParamList = {
   Splashscreen: undefined;
   Authen: undefined;
@@ -29,7 +30,7 @@ export type RootStackParamList = {
     nameLession: string;
   };
   DoHomeWorkScreen: {};
-  ListQuestionScreen: {};
+  ListQuestionScreen: { data: IChapterWithoutExercises };
   QuizzStack: undefined;
   AnalyzeExercisesScreen: {
     uriImage: string;

@@ -4,7 +4,7 @@ import {Alert} from 'react-native';
 import styled from 'styled-components/native';
 import Octicons from 'react-native-vector-icons/Octicons';
 import TextMyfont from '../TextMyfont ';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {IChapterWithoutExercises} from '../../interfaces/Subject';
 import {DoHomeWorkScreenNavigationProps as DoHomeWorkNavigationProps} from '../../screens/LearnSpace/DoHomeWorkScreen';
 import {useDispatch} from 'react-redux';
@@ -12,7 +12,8 @@ import {
   setChapterEnable,
   setListQuestionChapter,
 } from '../../redux/classRoom/actions';
-// create a component
+import { RootStackParamList } from '../../routes/RootStack';
+
 const Container = styled.TouchableOpacity`
   width: 100%;
   background-color: #9e80f2;
@@ -34,6 +35,8 @@ const NumQuestion = styled(TextMyfont)`
 
 const ItemChapter: FC<IChapterWithoutExercises> = props => {
   const navigation = useNavigation<DoHomeWorkNavigationProps>();
+  const route = useRoute<RouteProp<RootStackParamList, 'ListQuestionScreen'>>();
+  const data = route.params?.data; 
   const dispatch = useDispatch();
   const onPress = async () => {
     props.questions.length > 0
@@ -45,7 +48,7 @@ const ItemChapter: FC<IChapterWithoutExercises> = props => {
           }),
         ),
         dispatch(setListQuestionChapter(props.questions)),
-        navigation.navigate('ListQuestionScreen', {}))
+        navigation.navigate('ListQuestionScreen', {data : props}))
       : Alert.alert(
           'Thông báo',
           'Có vẻ như chương này chưa sẵn sàng để bạn ôn luyện',

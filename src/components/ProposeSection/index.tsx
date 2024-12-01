@@ -6,6 +6,7 @@ import { useAuth } from '../../configs/AuthProvider';
 import {ChapterSubjectScreenNavigationProps as ChapterSubjectNavigationProps} from '../../screens/LearnSpace/ChapterSubjectScreen';
 import { useNavigation } from '@react-navigation/native';
 import { IChapter, IChapterLessonData, IChapters } from '../../interfaces/Subject';
+import TextMyfont from '../TextMyfont ';
 
 const Container = styled(View)`
   flex: 1;
@@ -52,15 +53,17 @@ const LessonDescription = styled(Text)`
 
 const ImageChapterSubjectContainer = styled.ImageBackground`
   width: 100%;
-  height: 120px;
+  height: 100px;
   overflow: hidden;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 `;
 
-interface ItemChapterSubjectProps {
-  data: IChapter;
-}
+const LabelChapterSubject = styled(TextMyfont)`
+  margin: 10px;
+  font-size: 12px;
+  color: black;
+`;
 
 const ProposeSection = () => {
   const navigation = useNavigation<ChapterSubjectNavigationProps>();
@@ -84,7 +87,7 @@ const ProposeSection = () => {
     });
   };
 
-  const fetchLastLessons = React.useCallback(async () => {
+  const LastLessons = React.useCallback(async () => {
     if (!user || !user.id) {
       console.log('User not authenticated or id not available');
       setError('User not authenticated');
@@ -102,13 +105,13 @@ const ProposeSection = () => {
       }
     } catch (err) {
       console.error(err);
-      setError('An error occurred while fetching lessons');
+      setError('Không thể lấy ra bài học');
     }
   }, [user?.id]);
 
   useEffect(() => {
     if (user && user.id) {
-      fetchLastLessons();
+      LastLessons();
     }
   }, [user?.id]);
 
@@ -135,7 +138,11 @@ const ProposeSection = () => {
               <ImageChapterSubjectContainer
                 source={{
                   uri: chapter.chapter_image,
-                }}/>
+                }}>
+                <LabelChapterSubject numberLine={2}>
+                  {chapter.name_chapter_subject}
+                </LabelChapterSubject>
+              </ImageChapterSubjectContainer>
               <LessonInfo>
                 <LessonTitle numberOfLines={2} ellipsizeMode="tail">
                   {next_lesson.name_lesstion_chapter}

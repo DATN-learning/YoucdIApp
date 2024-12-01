@@ -4,7 +4,7 @@ export interface IView{
     id: number,
     view_id:string,
     user_id:number,
-    id_view_query:ILessionByChapterPayLoad,
+    id_view_query: string,
     time_view:string,
 }
 

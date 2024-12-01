@@ -21,3 +21,18 @@ export const submitChapterAnswer = (
     data,
   );
 };
+
+export const getPointChapter = (
+  user_id: string,
+  question_query_id: string,
+) => {
+  const data = {
+    user_id,
+    question_query_id,
+  }
+
+  return axiosClient.post<IScoresPayload>(
+    apiRouters.getPointChapter,
+    data,
+  );
+}

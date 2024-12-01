@@ -15,7 +15,6 @@ import {
   setCountDown,
   setQuestionSelected,
 } from '../../redux/gameChapter/actions';
-import {submitChapterAnswer} from '../../api/scoreApi'; // Import the API call
 
 const ItemQuestionGameContainer = styled.View`
   flex: 1;
