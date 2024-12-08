@@ -2,6 +2,7 @@ export const apiRouters = {
   loginByGmail: '/api/auth/login',
   registerAccount:'/api/auth/resgister',
   loginByToken: '/api/auth/checktoken',
+  updateprofile: '/api/auth/updateprofile',
   getClassRoom: '/api/classroom',
   getChapterSubject: '/api/classroom/getChapterSubject',
   getChapterExercises: '/api/classroom/getChapterExercises',

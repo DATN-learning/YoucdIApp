@@ -144,7 +144,7 @@ const LessionChapterContainer = () => {
 
   const animatedEvent = () => {
     Animated.spring(translateY, {
-      toValue: hideSlide ? 0 : -500,
+      toValue: hideSlide ? 0 : 0,
       useNativeDriver: true,
     }).start();
     setHideSlide(!hideSlide);
@@ -168,7 +168,7 @@ const LessionChapterContainer = () => {
             {lession?.name_lesstion_chapter}
             {''}
           </NameLession>
-          {lession?.pdfFiles && lession?.pdfFiles.length > 0 && !hideSlide ? (
+          {lession?.pdfFiles && lession?.pdfFiles.length > 0 && (
             <>
               <SlideContainer
                 style={{
@@ -179,7 +179,7 @@ const LessionChapterContainer = () => {
                   ],
                 }}>
                 <PDFViewer
-                  url={
+                  url_pdf={
                     lession && lession.pdfFiles.length > 0
                       ? lession?.pdfFiles[indexSlideShow].pdf_file
                       : ''
@@ -187,24 +187,26 @@ const LessionChapterContainer = () => {
                 />
               </SlideContainer>
             </>
-          ) : null}
+          )}
           <ContentContainer>
             {lession?.pdfFiles &&
               lession?.pdfFiles.length > 0 &&
               !hideSlide && (
-                <NameSlide numberLine={2}>
-                  Slide:{lession?.pdfFiles[indexSlideShow]?.url_pdf}
-                </NameSlide>
+                <>
+                  <NameSlide numberLine={2}>
+                    Slide:{lession?.pdfFiles[indexSlideShow]?.url_pdf}
+                  </NameSlide>
+                  <ListSlideSection
+                    data={
+                      lession?.pdfFiles && lession?.pdfFiles.length > 0
+                      ? lession?.pdfFiles
+                      : []
+                    }
+                    indexSlideShow={indexSlideShow}
+                    setIndexSlideShow={setIndexSlideShow}
+                    />
+                </>
               )}
-            <ListSlideSection
-              data={
-                lession?.pdfFiles && lession?.pdfFiles.length > 0
-                  ? lession?.pdfFiles
-                  : []
-              }
-              indexSlideShow={indexSlideShow}
-              setIndexSlideShow={setIndexSlideShow}
-            />
             {lession?.questions && lession?.questions.length > 0 && (
               <LabelContainer>
                 <Label>Các bài tập ví dụ : </Label>
