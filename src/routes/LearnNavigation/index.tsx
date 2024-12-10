@@ -46,7 +46,7 @@ const TabArr = [
   {
     routeName: 'Tournaments',
     screen: TournamentsScreen,
-    label: 'Giải đấu',
+    label: 'Chat',
     activeIcon: 'CodeSandbox',
     inactiveIcon: 'CodeSandbox',
     typeIcon: Icons.AntDesign,

@@ -1,22 +1,22 @@
 import * as React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import styled from 'styled-components/native';
-import TournamentList from '../components/TournamentList';
+import ChatBot from '../components/ChatBot';
 
-const TournamentsViewContainer = styled.View`
+const ChatContainerView = styled.View`
   flex: 1;
   background-color: #fff;
   padding: 10px 20px;
 `;
 
-interface TournamentsContainerProps {}
+interface ChatContainerProps {}
 
-const TournamentsContainer: React.FC<TournamentsContainerProps> = props => {
+const ChatContainer: React.FC<ChatContainerProps> = props => {
   return (
-    <TournamentsViewContainer>
-      <TournamentList/>
-    </TournamentsViewContainer>
+    <ChatContainerView>
+      <ChatBot />
+    </ChatContainerView>
   );
 };
 
-export default TournamentsContainer;
+export default ChatContainer;
