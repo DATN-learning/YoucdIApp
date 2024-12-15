@@ -15,6 +15,9 @@ export const apiRouters = {
   createCommentPost: 'api/manapost/createCommentPost',
   createDeviceToken: 'api/tokennotification',
 
+  createRating:'api/rating/createRating',
+  getRatingByLessionChapterId:'api/rating/getRatingByLessionChapterId',
+  deleteRating:'api/rating/deleteRating',
   //
   submitChapterAnswer: 'api/question/submitedChapterAnswer',
   getPointChapter: 'api/question/getPointChapter',

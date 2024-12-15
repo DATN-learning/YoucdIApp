@@ -15,7 +15,9 @@ import ListSlideSection from '../components/ListSlideSection';
 import ItemQuestion from '../components/QuestionSection/ItemQuestion';
 import { startView } from '../api/viewApi';
 import { useAuth } from '../configs/AuthProvider';
+import Ratings from '../components/RatingSection/Ratings';
 // create a component
+
 
 const Container = styled.View`
   flex: 1;
@@ -60,6 +62,7 @@ const ListQuestionContainer = styled.View`
   padding: 0px 20px;
 `;
 
+
 const LessionChapterContainer = () => {
   const [translateY] = React.useState(new Animated.Value(0));
   const {user } = useAuth();
@@ -71,9 +74,11 @@ const LessionChapterContainer = () => {
   const [hideSlide, setHideSlide] = React.useState<boolean>(false);
   const [startTime, setStartTime] = React.useState<number | null>(null);
 
+
   React.useEffect(() => {
     getLession();
   }, [route.params.idLession, route.params.idChapter]);
+
 
   const handleStartView = async () => {
     if (!user?.id) {
@@ -81,8 +86,10 @@ const LessionChapterContainer = () => {
       return;
     }
 
+
     // Lưu thời gian bắt đầu
     setStartTime(Date.now());
+
 
     try {
       const res = await startView({
@@ -96,6 +103,7 @@ const LessionChapterContainer = () => {
       console.error('Failed to call startView API:', err);
     }
   };
+
 
   const sendEndView = async (elapsedTime: number) => {
     try {
@@ -111,17 +119,19 @@ const LessionChapterContainer = () => {
     }
   };
 
+
   React.useEffect(() => {
     if(user.id && lession){
       handleStartView();
       return () => {
         if (startTime) {
-          const elapsedTime = Math.floor((Date.now() - startTime) / 1000); 
-          sendEndView(elapsedTime); 
+          const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+          sendEndView(elapsedTime);
         }
       };
     }
   }, [user.id, lession]);
+
 
   const getLession = async () => {
     setIsLoading(true);
@@ -139,8 +149,9 @@ const LessionChapterContainer = () => {
     }
   };
   React.useEffect(() => {
-    setHideSlide(false);
+    setHideSlide(true);
   }, [indexSlideShow]);
+
 
   const animatedEvent = () => {
     Animated.spring(translateY, {
@@ -149,6 +160,7 @@ const LessionChapterContainer = () => {
     }).start();
     setHideSlide(!hideSlide);
   };
+
 
   return (
     <Container>
@@ -226,8 +238,12 @@ const LessionChapterContainer = () => {
               <FlatList
                 data={lession?.questions}
                 renderItem={({item}) => <ItemQuestion {...item} />}
-                keyExtractor={item => item.id.toString()}
-                ListFooterComponent={() => <View style={{height: 200}} />}
+                keyExtractor={(item) => item.id.toString()}
+                ListFooterComponent={() => (
+                  <View>
+                    <Ratings lessonChapterId={lession?.id}  />
+                  </View>
+                )}
               />
             </ListQuestionContainer>
           </ContentContainer>
@@ -236,6 +252,7 @@ const LessionChapterContainer = () => {
     </Container>
   );
 };
+
 
 //make this component available to the app
 export default LessionChapterContainer;

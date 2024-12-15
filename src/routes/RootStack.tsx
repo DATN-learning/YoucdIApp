@@ -44,7 +44,9 @@ export type RootStackParamList = {
     blocResponse: Response;
   };
   DetailsPostScreen: undefined;
-  ResultScreen: {};
+  ResultScreen: { 
+    // score: string; userAnswers: { is_correct: boolean }[] 
+  };
 };
 const Stack = createStackNavigator<RootStackParamList>();
 const RootStack: FC = () => {

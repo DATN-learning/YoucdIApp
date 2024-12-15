@@ -28,18 +28,19 @@ export type ResultScreenNavigationProps = NativeStackNavigationProp<
   'ResultScreen'
 >;
 
-const ResultScreen = ({route, navigation}: any) => {
-  const {score, userAnswers} = route.params;
-  const navigations = useNavigation<ResultScreenNavigationProps>();
+const ResultScreen = ({ route, navigation }: any) => {
+  const { score = 0, userAnswers = [] } = route.params || {};
+
+  console.log('Route Params:', route.params);
 
   return (
     <ResultScreenContainer>
-      <Text style={{color: '#fff', fontSize: 24}}>Kết quả</Text>
-      <Text style={{color: '#fff', fontSize: 20}}>Điểm: {score}</Text>
+      <Text style={{ color: '#fff', fontSize: 24 }}>Kết quả</Text>
+      <Text style={{ color: '#fff', fontSize: 20 }}>Điểm: {score}</Text>
       <FlatList
         data={userAnswers}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({item, index}) => (
+        renderItem={({ item, index }) => (
           <ResultItem>
             <ResultText>
               Câu {index + 1}: {item.is_correct ? 'Đúng' : 'Sai'}
@@ -51,5 +52,6 @@ const ResultScreen = ({route, navigation}: any) => {
     </ResultScreenContainer>
   );
 };
+
 
 export default ResultScreen;

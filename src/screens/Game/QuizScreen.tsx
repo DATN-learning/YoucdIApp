@@ -127,9 +127,9 @@ const QuizScreen = () => {
         id_question_query,
         userAnswers
       );
-      console.log(response.data.data);
+      console.log(response.data.data.total_score);
       navigation.navigate('ResultScreen', {
-        score: response.data.data,  
+        score: response.data.data.total_score,  
         userAnswers: userAnswers,
       }); 
     } catch (error) {

@@ -25,6 +25,8 @@ export interface IScore {
 export interface IScoresPayload {
     status: boolean;
     message: string;
-    data:  IScore;
+    data:  {
+        total_score: IScore;
+    }
 }
 
