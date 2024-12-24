@@ -66,7 +66,6 @@ const Ratings: FC<IRatingLessiomProps> = ({lessonChapterId}) => {
   const lesson_chapter_id = lessonChapterId;
   const ratingid = "0";
 
-
   const handleStarPress = (star: number) => {
     setRating(star);
   };

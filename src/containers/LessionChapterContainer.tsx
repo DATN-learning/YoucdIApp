@@ -16,6 +16,7 @@ import ItemQuestion from '../components/QuestionSection/ItemQuestion';
 import { startView } from '../api/viewApi';
 import { useAuth } from '../configs/AuthProvider';
 import Ratings from '../components/RatingSection/Ratings';
+import ListRatings from '../components/RatingSection/ListRatings';
 // create a component
 
 
@@ -242,6 +243,7 @@ const LessionChapterContainer = () => {
                 ListFooterComponent={() => (
                   <View>
                     <Ratings lessonChapterId={lession?.id}  />
+                    <ListRatings lessonChapterId={lession?.id}   />
                   </View>
                 )}
               />

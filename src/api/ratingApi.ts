@@ -1,5 +1,5 @@
 import { apiRouters } from "../configs/apiRouters";
-import { IRatingPayload } from "../interfaces/Ratings";
+import { IRatingPayload, IRatingPayloads } from "../interfaces/Ratings";
 import axiosClient from "../libs/api/axiosClient";
 
 export const addRating = async (
@@ -21,5 +21,17 @@ export const addRating = async (
       data
     );
     return response;
+};
+
+export const getRatingByLessionChapterId = async (
+  lesstion_chapter_id: number,
+) => {
+  const data = {
+    lesstion_chapter_id
   };
-  
+  const response = await axiosClient.post<IRatingPayloads>(
+    apiRouters.getRatingByLessionChapterId,
+    data
+  );
+  return response;
+};
