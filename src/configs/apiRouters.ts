@@ -18,6 +18,7 @@ export const apiRouters = {
   createRating:'api/rating/createRating',
   getRatingByLessionChapterId:'api/rating/getRatingByLessionChapterId',
   deleteRating:'api/rating/deleteRating',
+  getlesson_by_rating: 'api/rating/getlesson_by_rating',
   //
   submitChapterAnswer: 'api/question/submitedChapterAnswer',
   getPointChapter: 'api/question/getPointChapter',

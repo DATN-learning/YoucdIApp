@@ -35,12 +35,14 @@ export interface IChapterSubjectSuccessPayload {
   };
 }export interface IChapterSubjectSuccessPayloads {
   status: boolean;
-  data: IChapterLessonData[];
+  data: {
+    recommendations : IChapterLessonData[];
+  }
 }
 
 export interface IChapterLessonData {
   chapter: IChapters;
-  next_lesson: ILessionByChapterViewPayLoad; 
+  lesson: ILessionByChapterPayLoad; 
 }
 
 export interface IChapterWithoutExercises {

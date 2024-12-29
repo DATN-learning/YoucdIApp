@@ -33,7 +33,7 @@ export type HomeLearnScreenNavigationProps = CompositeNavigationProp<
 >;
 
 const HomeScreen = () => {
-  const {isAuthenticated} = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const dispath = useDispatch();
   const listChapter = useSelector(chooseChapter);
 
@@ -42,16 +42,21 @@ const HomeScreen = () => {
   }, [dispath]);
   
   React.useEffect(() => {
-    onLoadSubject();
-  }, [dispath]);
+    if (isAuthenticated) {
+      onLoadSubject();
+    }
+  }, [isAuthenticated, dispath]);
 
   return (
     <HomeScreenContainer>
       <HeaderHomeSection />
       <ScrollView>
         <MenuHeaderHomeSection />
-        {isAuthenticated ? null : <AuthHomeSection />}
-        {isAuthenticated && <ProposeSection />}
+        {isAuthenticated ? (
+          <ProposeSection key={user?.id} />
+        ) : (
+          <AuthHomeSection />
+        )}
         <ClassSection />
       </ScrollView>
     </HomeScreenContainer>

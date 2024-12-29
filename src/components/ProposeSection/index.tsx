@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components/native';
-import { ScrollView, Text, View, Image, Pressable } from 'react-native';
+import { ScrollView, Text, View, Image, Pressable, ActivityIndicator } from 'react-native';
 import { getUserLastLesson } from '../../api/viewApi';
 import { useAuth } from '../../configs/AuthProvider';
-import {ChapterSubjectScreenNavigationProps as ChapterSubjectNavigationProps} from '../../screens/LearnSpace/ChapterSubjectScreen';
+import { ChapterSubjectScreenNavigationProps as ChapterSubjectNavigationProps } from '../../screens/LearnSpace/ChapterSubjectScreen';
 import { useNavigation } from '@react-navigation/native';
-import { IChapter, IChapterLessonData, IChapters } from '../../interfaces/Subject';
+import { IChapterLessonData } from '../../interfaces/Subject';
 import TextMyfont from '../TextMyfont ';
+import { getlesson_by_rating } from '../../api/ratingApi';
 
 const Container = styled(View)`
   flex: 1;
@@ -65,11 +66,34 @@ const LabelChapterSubject = styled(TextMyfont)`
   color: black;
 `;
 
-const ProposeSection = () => {
+const LoadingContainer = styled(View)`
+  padding: 20px;
+  align-items: center;
+`;
+
+const RetryButton = styled(Pressable)`
+  width: 150px;
+  height: 100px;
+  background-color: white;
+  border-radius: 5px;
+`;
+
+const RetryText = styled(Text)`
+  color: white;
+  font-size: 14px;
+`;
+
+const ErrorContainer = styled(View)`
+  padding: 20px;
+  align-items: center;
+`;
+
+const ProposeSection: FC = () => {
   const navigation = useNavigation<ChapterSubjectNavigationProps>();
   const [lessons, setLessons] = useState<IChapterLessonData[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, isAuthenticated } = useAuth();
 
   const handlePressLesson = (
     idSubject: number,
@@ -87,51 +111,93 @@ const ProposeSection = () => {
     });
   };
 
-  const LastLessons = React.useCallback(async () => {
-    if (!user || !user.id) {
-      console.log('User not authenticated or id not available');
-      setError('User not authenticated');
+  const LastLessons = React.useCallback(async (forced = false) => {
+    if (!isAuthenticated || !user?.id) {
+      setError('Vui lòng đăng nhập để xem bài học đề xuất');
       return;
     }
-    try {
-      const response = await getUserLastLesson(user.id);
 
-      if (response.status) {
-        console.log('API response data:', response.data);
-        setLessons(response.data.data);
-        setError(null);
-      } else {
-        setError('Failed to fetch lessons');
-      }
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await getlesson_by_rating(user.id);
+      console.log('API Response:', response.data.data.recommendations);
+
+      if (response?.status) {
+        setLessons(response.data.data.recommendations || []);
+      } 
     } catch (err) {
-      console.error(err);
-      setError('Không thể lấy ra bài học');
+      setError('Không thể lấy ra bài học. Vui lòng thử lại.');
+    } finally {
+      setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, isAuthenticated]);
 
   useEffect(() => {
-    if (user && user.id) {
+    if (isAuthenticated && user?.id) {
       LastLessons();
     }
-  }, [user?.id]);
+  }, [isAuthenticated, user?.id]);
+
+  const handleRetry = () => {
+    LastLessons(true);
+  };
+
+  if (!isAuthenticated || !user?.id) {
+    return (
+      <Container>
+        <Title>Đề xuất bài học</Title>
+        <ErrorContainer>
+          <Text>Vui lòng đăng nhập để xem bài học đề xuất</Text>
+        </ErrorContainer>
+      </Container>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Container>
+        <Title>Đề xuất bài học</Title>
+        <LoadingContainer>
+          <ActivityIndicator size="large" color="#0066cc" />
+        </LoadingContainer>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Title>Đề xuất bài học</Title>
+        <ErrorContainer>
+          <RetryButton onPress={handleRetry}>
+            <RetryText>Thử lại</RetryText>
+          </RetryButton>
+        </ErrorContainer>
+      </Container>
+    );
+  }
 
   return (
     <Container>
       <Title>Đề xuất bài học</Title>
-      {error ? (
-        <Text style={{ color: 'red' }}>{error}</Text>
+      {lessons.length === 0 ? (
+        <Text style={{ textAlign: 'center', padding: 20 }}>
+          Chưa có bài học đề xuất
+        </Text>
       ) : (
         <LessonContainer horizontal showsHorizontalScrollIndicator={false}>
-          {lessons.map(({ chapter, next_lesson }, index) => (
+          {lessons.map(({ chapter, lesson }, index) => (
             <LessonCard
               key={`${chapter.id}-${index}`}
               onPress={() =>
                 handlePressLesson(
                   chapter.subject_id,
                   chapter.id,
-                  next_lesson.id,
+                  lesson.id,
                   chapter.number_chapter,
-                  next_lesson.name_lesstion_chapter
+                  lesson.name_lesstion_chapter
                 )
               }
             >
@@ -145,10 +211,10 @@ const ProposeSection = () => {
               </ImageChapterSubjectContainer>
               <LessonInfo>
                 <LessonTitle numberOfLines={2} ellipsizeMode="tail">
-                  {next_lesson.name_lesstion_chapter}
+                  {lesson.name_lesstion_chapter}
                 </LessonTitle>
                 <LessonDescription numberOfLines={1} ellipsizeMode="tail">
-                  {next_lesson.description_lesstion_chapter}
+                  {lesson.description_lesstion_chapter}
                 </LessonDescription>
               </LessonInfo>
             </LessonCard>

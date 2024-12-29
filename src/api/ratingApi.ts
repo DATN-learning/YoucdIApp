@@ -1,5 +1,7 @@
 import { apiRouters } from "../configs/apiRouters";
+import { ILessionByChapterPayLoads } from "../interfaces/Lession";
 import { IRatingPayload, IRatingPayloads } from "../interfaces/Ratings";
+import { IChapterSubjectSuccessPayloads } from "../interfaces/Subject";
 import axiosClient from "../libs/api/axiosClient";
 
 export const addRating = async (
@@ -35,3 +37,11 @@ export const getRatingByLessionChapterId = async (
   );
   return response;
 };
+
+export const getlesson_by_rating = async (user_id:string) => {
+
+  const res = await axiosClient.get<IChapterSubjectSuccessPayloads>(
+    `${apiRouters.getlesson_by_rating}/${user_id}`
+  );
+  return res
+}
