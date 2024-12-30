@@ -1,6 +1,5 @@
-//import liraries
 import React, {FC} from 'react';
-import {Alert, Dimensions, ScrollView} from 'react-native';
+import {Alert, Button, Dimensions, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import TextMyfont from '../TextMyfont ';
 import AnswerQuestionGame from './AnswerQuestionGame';
@@ -16,8 +15,7 @@ import {
   setCountDown,
   setQuestionSelected,
 } from '../../redux/gameChapter/actions';
-// create a component
-//  ${Dimensions.get('window').width - 30}px;
+
 const ItemQuestionGameContainer = styled.View`
   flex: 1;
   width: ${(props: {isLandscape: boolean}) =>
@@ -63,54 +61,42 @@ function shuffleArray(array: string[]) {
 const shuffledColors = shuffleArray([...colorsAnswer]);
 
 const ItemQuestionGame: FC<ItemQuestionGameProps> = props => {
-  const {orientation} = useAuth();
-  const {data, index} = props;
-  const [answerChoosed, setAnswerChoosed] = React.useState('');
+  const {data, index, onAnswerSelected} = props; 
   const [isChoose, setIsChoose] = React.useState(false);
-  const idQuestionSelected = useSelector(getIdQuestionSelected);
-  const countDown = useSelector(getCountDown);
-  const dispatch = useDispatch();
-  React.useEffect(() => {
-    if (countDown === 0 && index === idQuestionSelected) {
-      setIsChoose(true);
-    }
-  }, [countDown]);
+  const [answerChoosed, setAnswerChoosed] = React.useState('');
+  const {orientation, user} = useAuth();
 
   const answerChoose = (id: string) => {
-    let isError = data.answers.find(
-      item => item.id_answer === data.answer_correct,
-    );
-    if (!isError) {
-      Alert.alert('Thông báo', 'Có lỗi xảy ra, vui lòng thử lại sau');
-      return;
-    }
+    const isCorrect = id === data.answer_correct;
     setAnswerChoosed(id);
     setIsChoose(true);
-    dispatch(addQuestionAnswered(id));
+    console.log(id)
+
+    onAnswerSelected({
+      question_id: String(data.id),
+      answer_id: id,
+      is_correct: isCorrect,
+    });
   };
 
   return (
     <ItemQuestionGameContainer isLandscape={orientation === 'landscape'}>
       <QuestionContainer>
         <ScrollView>
-          <QuestionText numberLine={50}>{`${data.title}`}</QuestionText>
+          <QuestionText>{data.title}</QuestionText>
         </ScrollView>
       </QuestionContainer>
       <AnswerContainer>
-        {data.answers.map((item, index) => {
-          return (
-            <AnswerQuestionGame
-              key={index}
-              color={shuffledColors[index]}
-              item={item}
-              onClick={answerChoose}
-              isAnswerCorrect={
-                isChoose ? item.id_answer === data.answer_correct : false
-              }
-              isChoose={isChoose}
-            />
-          );
-        })}
+        {data.answers.map((item, index) => (
+          <AnswerQuestionGame
+            key={index}
+            color={shuffledColors[index]}
+            item={item}
+            onClick={() => answerChoose(item.id_answer)}
+            isAnswerCorrect={ isChoose ? item.id_answer === data.answer_correct : false }
+            isChoose={isChoose}
+          />
+        ))}
       </AnswerContainer>
     </ItemQuestionGameContainer>
   );

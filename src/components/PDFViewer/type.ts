@@ -1,3 +1,3 @@
 export interface IPDFViewerProps {
-    url: string;
+    url_pdf: string;
 }

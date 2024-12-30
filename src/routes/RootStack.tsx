@@ -14,6 +14,8 @@ import AnalyzeExercisesScreen from '../screens/LearnSpace/AnalyzeExercisesScreen
 import CreatePostScreen from '../screens/LearnSpace/CreatePostScreen';
 import DetailsPostScreen from '../screens/LearnSpace/DetailsPostScreen';
 import {Response} from '../mlkit';
+import ResultScreen from '../screens/Game/ResultScreen';
+import { IChapterWithoutExercises } from '../interfaces/Subject';
 export type RootStackParamList = {
   Splashscreen: undefined;
   Authen: undefined;
@@ -28,7 +30,7 @@ export type RootStackParamList = {
     nameLession: string;
   };
   DoHomeWorkScreen: {};
-  ListQuestionScreen: {};
+  ListQuestionScreen: { data: IChapterWithoutExercises };
   QuizzStack: undefined;
   AnalyzeExercisesScreen: {
     uriImage: string;
@@ -42,6 +44,9 @@ export type RootStackParamList = {
     blocResponse: Response;
   };
   DetailsPostScreen: undefined;
+  ResultScreen: { 
+    // score: string; userAnswers: { is_correct: boolean }[] 
+  };
 };
 const Stack = createStackNavigator<RootStackParamList>();
 const RootStack: FC = () => {
@@ -106,6 +111,11 @@ const RootStack: FC = () => {
       <Stack.Screen
         name="DetailsPostScreen"
         component={DetailsPostScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ResultScreen"
+        component={ResultScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

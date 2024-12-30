@@ -15,8 +15,10 @@ import {LearnNavigationParamList} from '../../routes/LearnNavigation';
 import ClassSection from '../../components/ClassSection';
 import PDFViewer from '../../components/PDFViewer';
 import AuthHomeSection from '../../components/AuthHomeSection';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getSubjectClassRoomRequest} from '../../redux/classRoom/actions';
+import ProposeSection from '../../components/ProposeSection';
+import { chooseChapter } from '../../redux/classRoom/selectors';
 
 const HomeScreenContainer = styled.View`
   flex: 1;
@@ -31,23 +33,30 @@ export type HomeLearnScreenNavigationProps = CompositeNavigationProp<
 >;
 
 const HomeScreen = () => {
-  const {isAuthenticated} = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const dispath = useDispatch();
+  const listChapter = useSelector(chooseChapter);
 
   const onLoadSubject = React.useCallback(() => {
     dispath(getSubjectClassRoomRequest());
   }, [dispath]);
   
   React.useEffect(() => {
-    onLoadSubject();
-  }, [dispath]);
+    if (isAuthenticated) {
+      onLoadSubject();
+    }
+  }, [isAuthenticated, dispath]);
 
   return (
     <HomeScreenContainer>
       <HeaderHomeSection />
       <ScrollView>
         <MenuHeaderHomeSection />
-        {isAuthenticated ? null : <AuthHomeSection />}
+        {isAuthenticated ? (
+          <ProposeSection key={user?.id} />
+        ) : (
+          <AuthHomeSection />
+        )}
         <ClassSection />
       </ScrollView>
     </HomeScreenContainer>

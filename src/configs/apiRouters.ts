@@ -2,6 +2,7 @@ export const apiRouters = {
   loginByGmail: '/api/auth/login',
   registerAccount:'/api/auth/resgister',
   loginByToken: '/api/auth/checktoken',
+  updateprofile: '/api/auth/updateprofile',
   getClassRoom: '/api/classroom',
   getChapterSubject: '/api/classroom/getChapterSubject',
   getChapterExercises: '/api/classroom/getChapterExercises',
@@ -13,4 +14,15 @@ export const apiRouters = {
   getCommentByPost: 'api/manapost/getCommentPost',
   createCommentPost: 'api/manapost/createCommentPost',
   createDeviceToken: 'api/tokennotification',
+
+  createRating:'api/rating/createRating',
+  getRatingByLessionChapterId:'api/rating/getRatingByLessionChapterId',
+  deleteRating:'api/rating/deleteRating',
+  getlesson_by_rating: 'api/rating/getlesson_by_rating',
+  //
+  submitChapterAnswer: 'api/question/submitedChapterAnswer',
+  getPointChapter: 'api/question/getPointChapter',
+  //view
+  getUserLastLesson: 'api/view/getUserLastLesson',
+  startView: 'api/view/startView',
 };

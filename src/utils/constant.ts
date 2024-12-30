@@ -1,5 +1,4 @@
-
-const url='http://192.168.1.125'
+const url='http://192.168.1.12'
 
 export const configs = {
   apiLink: `${url}:8000`,

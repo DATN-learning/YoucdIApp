@@ -27,6 +27,7 @@ const ButtonLogout = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+  margin-bottom: 100px;
 `;
 const LogoutText = styled(TextMyfont)`
   font-size: 20px;
@@ -35,7 +36,6 @@ const LogoutText = styled(TextMyfont)`
 
 const IndividualTabView = () => {
   const {user, logout, isAuthenticated} = useAuth();
-  console.log('user', user);
   return (
     <IndividualTabViewContainer>
       {isAuthenticated && (

@@ -13,7 +13,12 @@ import {Alert, FlatList, Animated, View, TouchableOpacity} from 'react-native';
 import TextMyfont from '../components/TextMyfont ';
 import ListSlideSection from '../components/ListSlideSection';
 import ItemQuestion from '../components/QuestionSection/ItemQuestion';
+import { startView } from '../api/viewApi';
+import { useAuth } from '../configs/AuthProvider';
+import Ratings from '../components/RatingSection/Ratings';
+import ListRatings from '../components/RatingSection/ListRatings';
 // create a component
+
 
 const Container = styled.View`
   flex: 1;
@@ -58,17 +63,77 @@ const ListQuestionContainer = styled.View`
   padding: 0px 20px;
 `;
 
+
 const LessionChapterContainer = () => {
   const [translateY] = React.useState(new Animated.Value(0));
+  const {user } = useAuth();
   const route =
     useRoute<RouteProp<RootStackParamList, 'LessionChapterScreen'>>();
   const [isLoading, setIsLoading] = React.useState(false);
   const [lession, setLession] = React.useState<ILession>();
   const [indexSlideShow, setIndexSlideShow] = React.useState<any>(0);
   const [hideSlide, setHideSlide] = React.useState<boolean>(false);
+  const [startTime, setStartTime] = React.useState<number | null>(null);
+
+
   React.useEffect(() => {
     getLession();
   }, [route.params.idLession, route.params.idChapter]);
+
+
+  const handleStartView = async () => {
+    if (!user?.id) {
+      console.warn('User not logged in, skipping startView API call');
+      return;
+    }
+
+
+    // Lưu thời gian bắt đầu
+    setStartTime(Date.now());
+
+
+    try {
+      const res = await startView({
+        view_id: `view-${route.params.idLession}`,
+        user_id: user?.id,
+        id_view_query: lession?.id_lesstion_chapter || "",
+        time_view: 0,
+      });
+      console.log('startView API called successfully',res.data.data);
+    } catch (err) {
+      console.error('Failed to call startView API:', err);
+    }
+  };
+
+
+  const sendEndView = async (elapsedTime: number) => {
+    try {
+      await startView({
+        view_id: `view-${route.params.idLession}`,
+        user_id: user?.id,
+        id_view_query: lession?.id_lesstion_chapter || "",
+        time_view: elapsedTime,
+      });
+      console.log(`Successfully sent time_view: ${elapsedTime} seconds`);
+    } catch (err) {
+      console.error('Failed to update time_view:', err);
+    }
+  };
+
+
+  React.useEffect(() => {
+    if(user.id && lession){
+      handleStartView();
+      return () => {
+        if (startTime) {
+          const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+          sendEndView(elapsedTime);
+        }
+      };
+    }
+  }, [user.id, lession]);
+
+
   const getLession = async () => {
     setIsLoading(true);
     try {
@@ -85,16 +150,18 @@ const LessionChapterContainer = () => {
     }
   };
   React.useEffect(() => {
-    setHideSlide(false);
+    setHideSlide(true);
   }, [indexSlideShow]);
+
 
   const animatedEvent = () => {
     Animated.spring(translateY, {
-      toValue: hideSlide ? 0 : -500,
+      toValue: hideSlide ? 0 : 0,
       useNativeDriver: true,
     }).start();
     setHideSlide(!hideSlide);
   };
+
 
   return (
     <Container>
@@ -114,7 +181,7 @@ const LessionChapterContainer = () => {
             {lession?.name_lesstion_chapter}
             {''}
           </NameLession>
-          {lession?.pdfFiles && lession?.pdfFiles.length > 0 && !hideSlide ? (
+          {lession?.pdfFiles && lession?.pdfFiles.length > 0 && (
             <>
               <SlideContainer
                 style={{
@@ -125,7 +192,7 @@ const LessionChapterContainer = () => {
                   ],
                 }}>
                 <PDFViewer
-                  url={
+                  url_pdf={
                     lession && lession.pdfFiles.length > 0
                       ? lession?.pdfFiles[indexSlideShow].pdf_file
                       : ''
@@ -133,24 +200,26 @@ const LessionChapterContainer = () => {
                 />
               </SlideContainer>
             </>
-          ) : null}
+          )}
           <ContentContainer>
             {lession?.pdfFiles &&
               lession?.pdfFiles.length > 0 &&
               !hideSlide && (
-                <NameSlide numberLine={2}>
-                  Slide:{lession?.pdfFiles[indexSlideShow]?.url_pdf}
-                </NameSlide>
+                <>
+                  <NameSlide numberLine={2}>
+                    Slide:{lession?.pdfFiles[indexSlideShow]?.url_pdf}
+                  </NameSlide>
+                  <ListSlideSection
+                    data={
+                      lession?.pdfFiles && lession?.pdfFiles.length > 0
+                      ? lession?.pdfFiles
+                      : []
+                    }
+                    indexSlideShow={indexSlideShow}
+                    setIndexSlideShow={setIndexSlideShow}
+                    />
+                </>
               )}
-            <ListSlideSection
-              data={
-                lession?.pdfFiles && lession?.pdfFiles.length > 0
-                  ? lession?.pdfFiles
-                  : []
-              }
-              indexSlideShow={indexSlideShow}
-              setIndexSlideShow={setIndexSlideShow}
-            />
             {lession?.questions && lession?.questions.length > 0 && (
               <LabelContainer>
                 <Label>Các bài tập ví dụ : </Label>
@@ -170,8 +239,13 @@ const LessionChapterContainer = () => {
               <FlatList
                 data={lession?.questions}
                 renderItem={({item}) => <ItemQuestion {...item} />}
-                keyExtractor={item => item.id.toString()}
-                ListFooterComponent={() => <View style={{height: 200}} />}
+                keyExtractor={(item) => item.id.toString()}
+                ListFooterComponent={() => (
+                  <View>
+                    <Ratings lessonChapterId={lession?.id}  />
+                    <ListRatings lessonChapterId={lession?.id}   />
+                  </View>
+                )}
               />
             </ListQuestionContainer>
           </ContentContainer>
@@ -180,6 +254,7 @@ const LessionChapterContainer = () => {
     </Container>
   );
 };
+
 
 //make this component available to the app
 export default LessionChapterContainer;

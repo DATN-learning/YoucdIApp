@@ -25,3 +25,8 @@ export const getChapterEnable = createSelector(
   classSelector,
   classState => classState.chapterEnable,
 );
+
+export const chooseChapter = createSelector(
+  classSelector,
+  classState => classState.listchapter,
+);

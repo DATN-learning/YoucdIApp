@@ -19,6 +19,8 @@ const PDFViewer: FC<IPDFViewerProps> = props => {
   const [isShowMenu, setShowMenu] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(1);
+  const encodedUrl = encodeURI(props.url_pdf);
+
   const translateMenu = () => {
     Animated.spring(translateX, {
       toValue: !isShowMenu ? 0 : -Dimensions.get('window').width,
@@ -43,7 +45,7 @@ const PDFViewer: FC<IPDFViewerProps> = props => {
   const sharePDF = async () => {
     try {
       const result = await Share.share({
-        message: props.url,
+        message: props.url_pdf,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -58,6 +60,8 @@ const PDFViewer: FC<IPDFViewerProps> = props => {
       Alert.alert("Can't share this file");
     }
   };
+  console.log('props.url:', props.url_pdf);
+
 
   return (
     <View style={{flex: 1, backgroundColor: '#9e80f2'}}>
@@ -69,8 +73,12 @@ const PDFViewer: FC<IPDFViewerProps> = props => {
           console.log(progressData);
         }}
         source={{
-          uri: props.url,
+          // uri: "http://192.168.1.125:8000/pdfs/67185f2bd69a3lession-231020246-28-367185f2080c89.pdf",
+          uri: encodedUrl,
           cache: true,
+          headers: {
+            Authorization: 'Bearer YOUR_ACCESS_TOKEN',
+          },
         }}
         onLoadComplete={(numberOfPages, filePath) => {
           console.log(`number of pages: ${numberOfPages}`);
