@@ -1,75 +1,9 @@
-// import * as React from 'react';
-// import {Text, View, StyleSheet} from 'react-native';
-// import styled from 'styled-components/native';
-// import {useAuth} from '../../configs/AuthProvider';
-// import TextMyfont from '../TextMyfont ';
-// import { AppColors } from '../../utils/constant';
-
-// const InfoAccSectionContainer = styled.View`
-//   width: 100%;
-//   justify-content: center;
-//   align-items: center;
-//   flex-direction: row;
-//   padding:  10px 0px;
-// `;
-// const InfoAccContainer = styled.View`
-//   flex: 1;
-//   padding: 10px;
-// `;
-// const AvatarAccContainer = styled.View`
-//   padding: 10px;
-//   justify-content: center;
-// `;
-// const AvatarAcc = styled.Image`
-//   width: 50px;
-//   height: 50px;
-//   border-radius: 25px;
-// `;
-// const NameAcc = styled(TextMyfont)`
-//   font-size: 20px;
-//   color: ${AppColors.purple};
-// `;
-// const EmailAcc = styled(TextMyfont)`
-//   font-size: 15px;
-//   color: ${AppColors.purple};
-// `;
-// interface InfoAccSectionProps {}
-
-// const InfoAccSection: React.FC<InfoAccSectionProps> = props => {
-//   const {user} = useAuth();
-//   return (
-//     <InfoAccSectionContainer
-//     style={{
-//         borderBottomWidth: 1,
-//         borderBottomColor: '#e8e8e8',
-//     }}
-//     >
-//       <InfoAccContainer>
-//         <NameAcc>
-//           {user.first_name} {user.last_name}
-//         </NameAcc>
-//         <EmailAcc>{user.email}</EmailAcc>
-//       </InfoAccContainer>
-//       <AvatarAccContainer>
-//         <AvatarAcc
-//           source={{
-//             uri: 'https://videogames.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cq_auto:good%2Cw_1200/MTk1Mjk1MDkxNTgwMDIwMDI2/genshin-impact-ayaka-card-1.png',
-//           }}
-//         />
-//       </AvatarAccContainer>
-//     </InfoAccSectionContainer>
-//   );
-// };
-
-// export default InfoAccSection;
-
-
 import React, {useState} from 'react';
 import {Text, View, TextInput, StyleSheet, Button, TouchableOpacity, Image, ScrollView, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import * as ImagePicker from 'react-native-image-picker';
 import {useAuth} from '../../configs/AuthProvider';
-import {AppColors} from '../../utils/constant';
+import {AppColors, configs} from '../../utils/constant';
 import { updateProfile } from '../../api/authLogin';
 
 const Container = styled.ScrollView`
@@ -132,40 +66,16 @@ const UpdateProfileScreen: React.FC = () => {
     number_stars: '',
     school_name: '',
     class_room_id: '',
-    id_image: null,
+    id_image: user?.profile?.id_image ?  `${configs.apiLink}/images/${user?.profile?.id_image}` : 'https://phunuvietnam.mediacdn.vn/media/news/33abffcedac43a654ac7f501856bf700/anh-profile-tiet-lo-g-ve-ban-1.jpg',
     id_cover_image: null,
   });
-
-  // Chọn ảnh từ thư viện
-  // const selectImage = async (field: 'id_image' | 'id_cover_image') => {
-  //   const result = await ImagePicker.launchImageLibrary({
-  //     mediaType: 'photo',
-  //     quality: 0.8,
-  //   });
-  //   if (!result.didCancel && result.assets?.length > 0) {
-  //     setFormData({...formData, [field]: result.assets[0]});
-  //   }
-  // };
-
-  // // Xử lý submit form
-  // const handleSubmit = async () => {
-  //   try {
-  //     const response = await updateProfile({
-  //       formData
-  //     });
-  //     Alert('Profile updated successfully');
-  //   } catch (error) {
-  //     Alert('Failed to update profile. Please try again.');
-  //   }
-  // };
+  console.log(formData.id_image)
 
   return (
     <Container>
       <AvatarAccContainer>
         <AvatarAcc
-          source={{
-            uri: 'https://videogames.si.com/.image/ar_4:3%2Cc_fill%2Ccs_srgb%2Cq_auto:good%2Cw_1200/MTk1Mjk1MDkxNTgwMDIwMDI2/genshin-impact-ayaka-card-1.png',
-          }}
+          source={{uri: formData.id_image }}
         />
       </AvatarAccContainer>
       <Label>First Name</Label>
@@ -252,29 +162,6 @@ const UpdateProfileScreen: React.FC = () => {
         onChangeText={(text) => setFormData({...formData, class_room_id: text})}
       />
 
-      {/* Chọn hình đại diện */}
-      <Label>Profile Image</Label>
-      <ImagePickerContainer>
-        {formData.id_image && (
-          <SelectedImage source={{uri: formData.id_image}} />
-        )}
-        {/* <Button title="Select Profile Image" onPress={() => selectImage('id_image')} /> */}
-        <Button title="Select Profile Image" />
-
-      </ImagePickerContainer>
-
-      {/* Chọn ảnh bìa */}
-      <Label>Cover Image</Label>
-      <ImagePickerContainer>
-        {formData.id_cover_image && (
-          <SelectedImage source={{uri: formData.id_cover_image}} />
-        )}
-        <Button title="Select Cover Image" />
-        {/* <Button title="Select Cover Image" onPress={() => selectImage('id_cover_image')} /> */}
-      </ImagePickerContainer>
-
-      <Button title="Update Profile"  />
-      {/* <Button title="Update Profile" onPress={handleSubmit} /> */}
     </Container>
   );
 };

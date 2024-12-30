@@ -59,8 +59,8 @@ const SuggestExercisesSection: FC<SuggestExercisesSectionProps> = props => {
 
   React.useEffect(() => {
     socket.on('suggest_exercises', data => {
-      setTopSuggestions(data.lable);
-      const listSuggest = [data.lable, ...data.listCategory];
+      setTopSuggestions(data.lable); // gợi ý chính xác nhất
+      const listSuggest = [data.lable, ...data.listCategory]; //danh sách các bài post liên quan
       const listSuggestFilter = listSuggest.filter((item, index) => {
         return listSuggest.indexOf(item) === index;
       });

@@ -92,7 +92,7 @@ const QAndAContainer = () => {
       if (res.status === 200 && res.data.status) {
         const fetchedPosts = res.data.data.data;
         const total = res.data.data.total;
-        console.log("Tổng số trang", total);
+        console.log("Tổng số bài", total);
 
         setListPost(fetchedPosts);
         setTotalPosts(total);
